@@ -1,82 +1,82 @@
 #!/usr/bin/env python
 
-from setuptools import find_packages, setup
+从 setuptools 导入 find_packages, setup
 
-import os
-import subprocess
-import time
-import torch
-from torch.utils.cpp_extension import BuildExtension, CppExtension, CUDAExtension
+导入 os
+导入 subprocess
+导入时间
+导入 torch
+从 torch.utils.cpp_extension 导入 BuildExtension, CppExtension, CUDAExtension
 
 version_file = 'basicsr/version.py'
 
 
-def readme():
-    with open('README.md', encoding='utf-8') as f:
-        content = f.read()
-    return content
+定义 readme():
+    使用 打开('README.md', encoding='utf-8') 为 f:
+        内容 = f.读取()
+    返回 内容
 
 
 def get_git_hash():
 
     def _minimal_ext_cmd(cmd):
-        # construct minimal environment
+        # 构建最小环境
         env = {}
         for k in ['SYSTEMROOT', 'PATH', 'HOME']:
             v = os.environ.get(k)
-            if v is not None:
+            如果 v 不是 None ：
                 env[k] = v
-        # LANGUAGE is used on win32
+        # LANGUAGE 在 win32 上使用
         env['LANGUAGE'] = 'C'
         env['LANG'] = 'C'
         env['LC_ALL'] = 'C'
         out = subprocess.Popen(cmd, stdout=subprocess.PIPE, env=env).communicate()[0]
-        return out
+        返回 外
 
-    try:
+    尝试:
         out = _minimal_ext_cmd(['git', 'rev-parse', 'HEAD'])
         sha = out.strip().decode('ascii')
     except OSError:
-        sha = 'unknown'
+        sha = '未知'
 
-    return sha
+    返回 sha
 
 
 def get_hash():
-    if os.path.exists('.git'):
+    如果 os.path.存在('.git'):
         sha = get_git_hash()[:7]
-    # currently ignore this
-    # elif os.path.exists(version_file):
+    # 目前忽略此项
+    # 否则如果版本文件存在：
     #     try:
     #         from basicsr.version import __version__
-    #         sha = __version__.split('+')[-1]
+    #         sha = __version__.split('+' )[-1]
     #     except ImportError:
-    #         raise ImportError('Unable to get git version')
-    else:
-        sha = 'unknown'
+    #         raise ImportError('无法获取 git 版本')
+    否则:
+        sha = '未知'
 
-    return sha
+    返回 sha
 
 
 def write_version_py():
-    content = """# GENERATED VERSION FILE
-# TIME: {}
+    内容 = """# 生成的版本文件
+# 时间: {}
 __version__ = '{}'
 __gitsha__ = '{}'
 version_info = ({})
-"""
+"" "" ""
     sha = get_hash()
-    with open('VERSION', 'r') as f:
+    使用 打开('版本', 'r') 为 f:
         SHORT_VERSION = f.read().strip()
     VERSION_INFO = ', '.join([x if x.isdigit() else f'"{x}"' for x in SHORT_VERSION.split('.')])
 
-    version_file_str = content.format(time.asctime(), SHORT_VERSION, sha, VERSION_INFO)
-    with open(version_file, 'w') as f:
-        f.write(version_file_str)
+    version_file_str = content.格式(时间.asctime(), SHORT_VERSION, sha, VERSION_INFO)
+    使用 打开(version_file, 'w') 为 f:
+        f.写入(version_file_str)
 
 
 def get_version():
-    with open(version_file, 'r') as f:
+    使用 打开(version_file, 'r') 为 f:
         exec(compile(f.read(), version_file, 'exec'))
     return locals()['__version__']
 
