@@ -1,13 +1,13 @@
-import os
-import csv
-import numpy as np
-import torch
-import pyiqa
-import argparse
-import sys
-from pyiqa.utils.img_util import imread2tensor
-import torchvision.transforms as transforms
-from pyiqa.default_model_configs import DEFAULT_CONFIGS
+导入 os
+导入 csv
+导入 numpy 为 np
+导入 torch
+导入 pyiqa
+导入 argparse
+导入 sys
+从 pyiqa.utils.img_util 导入 imread2tensor
+导入 torchvision.transforms 为 transforms
+从 pyiqa.default_model_configs 导入 DEFAULT_CONFIGS
 
 
 def load_test_img_batch(img_dir, ref_dir, all_metrics):
@@ -29,55 +29,55 @@ def load_test_img_batch(img_dir, ref_dir, all_metrics):
 
     # img_batch = torch.cat(img_batch, dim=0)
     # ref_batch = torch.cat(ref_batch, dim=0)
-    return img_batch, ref_batch, all_metrics
+    返回 img_batch, ref_batch, all_metrics
 
 
 def dict2csv(dic, filename):
-    """
+    "" "" ""
     将字典写入csv文件，要求字典的值长度一致。
-    :param dic: the dict to csv
-    :param filename: the name of the csv file
-    :return: None
-    """
-    file = open(filename, 'w', encoding='utf-8', newline='')
+    :param dic: 要转换为 csv 的字典
+    :param filename: csv文件的名称
+    :return: 无
+    "" "" ""
+    文件 = 打开(文件名, 'w', 编码='utf-8', 换行符='')
     csv_writer = csv.DictWriter(file, fieldnames=list(dic.keys()))
     csv_writer.writeheader()
     for i in range(len(dic[list(dic.keys())[0]])):   
         dic1 = {key: dic[key][i] for key in dic.keys()}
         csv_writer.writerow(dic1)
-    file.close()
+    文件。关闭()
 
 # python test_metrics.py -m psnr ssim ssimc niqe lpips --use_cpu
 
 def run_test(test_metric_names, use_cpu):
     # img_dir = r'F:\Experiments\LLIEResutls\Ours\LOLv2_2448'
     # ref_dir = r'F:\Experiments\LLIEResutls\GT\LOLv2'
-    # method = 'iPASSR'
-    # dataset = 'MIT5K'
-#    img_dir = r'/home/zwb/code/UHDformer/results/WaveMamba_UHDLL'
-    img_dir = '/home/zwb/code/WaveMamba/results/WaveMamba_UHDLL'
+    # 方法 = 'iPASSR'
+    # 数据集 = 'MIT5K'
+#    img_dir = r'/home/zwb/code/UHDformer/results/SFMamba_UHDLL'
+    img_dir = '/home/zwb/code/SFMamba/results/SFMamba_UHDLL'
     ref_dir = '/home/ywp/zwb/LOLv1/eval15/high'
-    # ref_dir = r'F:\Experiments\LLIEResutls\GT\{}'.format(dataset)
-#    ref_dir = r'/home/zwb/code/Data/UHDLL/Test/gt'
+    # ref_dir = r'F:\Experiments\LLIEResutls\GT\{}&'.format(dataset)
+#    ref_dir = r'~/home/zwb/code/Data/UHDLL/Test/gt'
     device = torch.device('cuda' if torch.cuda.is_available() and not use_cpu else 'cpu')
-    print(f'============> Testing on {device}')
-    all_metrics = dict()
+    打印(f'============> 在 {设备}')
+    all_metrics = 字典()
     img_batch, ref_batch, all_metrics = load_test_img_batch(img_dir, ref_dir, all_metrics)
 
-    for metric_name in test_metric_names:
-        print(f'============> Testing {metric_name} ... ')
+    对于 metric_name 在 test_metric_names:
+        打印(f'============> 测试 {metric_name} ... ')
         iqa_metric = pyiqa.create_metric(metric_name, as_loss=True, device=device)
 
         metric_mode = DEFAULT_CONFIGS[metric_name]['metric_mode']
-        if metric_mode == 'FR':
-            score = []
+        如果 metric_mode == 'FR':
+            分数 = []
             for i in range(len(img_batch)):
                 b,c,h,w = img_batch[i].shape
-                score.append(iqa_metric(img_batch[i][:,:,:h,:w], ref_batch[i][:,:,:h,:w]).squeeze().data.cpu().numpy())
-        else:
-            score = []
+                分数。追加(iqa_metric(img_batch[i][:,:,:h,:w], ref_batch[i][:,:,:h,:w]).压缩().数据.cpu().numpy())
+        否则:
+            分数 = []
             for i in range(len(img_batch)):
-                print(i)
+                打印(i)
                 score.append(iqa_metric(img_batch[i]).squeeze().data.cpu().numpy())
                 torch.cuda.empty_cache()
         our_score = np.mean(score)
