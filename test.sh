@@ -1,1 +1,1 @@
-CUDA_VISIBLE_DEVICES=0 python inference_wavemamba_psnr_ssim.py
+CUDA_VISIBLE_DEVICES=0 python inference_SFmamba_psnr_ssim.py=0
