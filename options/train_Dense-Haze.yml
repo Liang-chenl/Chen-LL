@@ -1,5 +1,5 @@
 # general settings
-name: 001_WaveMamba_UHDLL
+name: 001_SFMamba_UHDLL
 # name: debug_FeMaSR
 model_type: FeMaSRModel
 scale: &upscale 1
@@ -50,7 +50,7 @@ datasets:
 
 
 network_g:
-  type: WaveMamba
+  type: SFMamba
   in_chn: 3
   wf: 32
   n_l_blocks: [1,1,2]
@@ -64,10 +64,10 @@ network_d:
 
 path:
   pretrain_network_hq: ~
-  pretrain_network_g: /home/ubuntu/CLL/Wave-mamba/experiments/001_WaveMamba_UHDLL/models/net_g_35000.pth
+  pretrain_network_g: /home/ubuntu/CLL/SF-mamba/experiments/001_SFMamba_UHDLL/models/net_g_35000.pth
   pretrain_network_d: ~
   strict_load: true
-  resume_state: /home/ubuntu/CLL/Wave-mamba/experiments/001_WaveMamba_UHDLL/training_states/35000.state
+  resume_state: /home/ubuntu/CLL/SF-mamba/experiments/001_SFMamba_UHDLL/training_states/35000.state
 
 
 
