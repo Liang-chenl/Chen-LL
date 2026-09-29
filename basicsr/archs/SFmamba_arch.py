@@ -1318,7 +1318,7 @@
 #
 #
 # @ARCH_REGISTRY.register()
-# class WaveMamba(nn.Module):
+# class SFMamba(nn.Module):
 #     def __init__(self,
 #                  *,
 #                  in_chn,
@@ -2117,7 +2117,7 @@ class UNet(nn.Module):
         return out_1, total_loss
 
 @ARCH_REGISTRY.register()
-class WaveMamba(nn.Module):
+class SFMamba(nn.Module):
     def __init__(self,
                  *,
                  in_chn,
