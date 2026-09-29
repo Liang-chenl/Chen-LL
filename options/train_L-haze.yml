@@ -1,5 +1,5 @@
 # general settings
-name: 001_WaveMamba_UHDLL
+name: 001_SFMamba_UHDLL
 # name: debug_FeMaSR
 model_type: FeMaSRModel
 scale: &upscale 1
@@ -50,7 +50,7 @@ datasets:
 
 
 network_g:
-  type: WaveMamba
+  type: SFMamba
   in_chn: 3
   wf: 32
   n_l_blocks: [1,1,1]
